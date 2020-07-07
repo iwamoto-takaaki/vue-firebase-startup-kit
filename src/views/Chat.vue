@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, reactive } from "@vue/composition-api";
 import { db } from "@/scripts/firebase";
 import CreateNew from "@/components/CreateNew.vue";
 import ListView from "@/components/ListView.vue";
@@ -23,11 +23,13 @@ export default defineComponent({
     ListView
   },
   setup(props, context) {
-    const refCollection = db.collection(`chatrooms`);
+    const state = reactive({
+      refCollection: db.collection(`chatrooms`),
+    });
 
     const handleCreated = (id: string) => context.root.$router.push(`/chat/${id}`);
 
-    return { refCollection, handleCreated }
+    return { ...state, handleCreated }
   },
 })
 </script>

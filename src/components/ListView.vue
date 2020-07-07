@@ -17,12 +17,15 @@ export default class ListView extends Vue {
   @Prop() readonly path!: string;
   detacher?: firebase.Unsubscribe;
   articles: Array<BaseDocument> = [];
+  memo = "";
 
   created() {
+    this.memo = "created";
     this.detacher = this.refCollection
       .orderBy("timeCreated", "desc")
       .where("owner", "==", this.$store.state.user.uid)
       .onSnapshot(snapshot => {
+        this.memo = "snapshot";
         this.articles = snapshot.docs.map(doc => {
           return Object.assign(doc.data(), { id: doc.id }) as BaseDocument;
         });
