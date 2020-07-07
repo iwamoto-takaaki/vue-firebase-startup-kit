@@ -10,25 +10,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { defineComponent } from "@vue/composition-api";
 import { db } from "@/scripts/firebase";
 import CreateNew from "@/components/CreateNew.vue";
 import ListView from "@/components/ListView.vue";
 import SourceLink from "@/components/SourceLink.vue";
 
-@Component({
+export default defineComponent({
   components: {
     SourceLink,
     CreateNew,
     ListView
-  }
-})
-export default class Blog extends Vue {
-  refCollection = db.collection(`chatrooms`);
+  },
+  setup(props, context) {
+    const refCollection = db.collection(`chatrooms`);
 
-  handleCreated(id: string) {
-    this.$router.push(`/chat/${id}`);
-  }
-}
+    const handleCreated = (id: string) => context.root.$router.push(`/chat/${id}`);
+
+    return { refCollection, handleCreated }
+  },
+})
 </script>
