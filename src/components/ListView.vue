@@ -22,13 +22,15 @@ export default class ListView extends Vue {
   created() {
     this.memo = "created";
     this.detacher = this.refCollection
-      .orderBy("timeCreated", "desc")
+      // .orderBy("timeCreated", "desc")
       .where("owner", "==", this.$store.state.user.uid)
       .onSnapshot(snapshot => {
         this.memo = "snapshot";
-        this.articles = snapshot.docs.map(doc => {
-          return Object.assign(doc.data(), { id: doc.id }) as BaseDocument;
-        });
+        this.articles = snapshot.docs
+          .sort((a, b) => a.data().timeCreated - b.data().timeCreated)
+          .map(doc => {
+            return Object.assign(doc.data(), { id: doc.id }) as BaseDocument;
+          });
       });
   }
   destroyed() {
